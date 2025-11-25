@@ -13,11 +13,7 @@ from app.services.sensor_factory import SensorFactory
 
 class JurassicMonitorService:
     def __init__(self):
-        self.loop = asyncio.get_event_loop()
-        self.scheduler = AsyncIOScheduler(self.loop)
-        self.factory = SensorFactory(self.scheduler)
-
-        # Estado del sistema (Métricas en memoria)
+        # Inicializamos variables, pero NO el scheduler todavía
         self.metrics = {
             "total_events": 0,
             "tps_history": [],
@@ -25,10 +21,9 @@ class JurassicMonitorService:
             "alerts_triggered": 0,
             "last_data": {}
         }
-
-        # Subject principal para transmitir datos a WebSockets
         self.broadcast_stream = Subject()
         self.is_running = False
+        self.scheduler = None  # Lo crearemos al iniciar
 
     def iniciar_sistema(self):
         if self.is_running:
@@ -36,6 +31,12 @@ class JurassicMonitorService:
 
         print(f"--- Iniciando Servicios de {APP_NAME} ---")
         self.is_running = True
+
+        # --- CORRECCIÓN CRÍTICA: Obtener el loop AQUÍ, cuando ya está corriendo ---
+        loop = asyncio.get_running_loop()
+        self.scheduler = AsyncIOScheduler(loop)
+        self.factory = SensorFactory(self.scheduler)
+        # -------------------------------------------------------------------------
 
         # 1. Crear flujos
         s1 = self.factory.crear_stream("cardiaco", "T-Rex-01", 0.1)
@@ -46,15 +47,15 @@ class JurassicMonitorService:
         # 2. Fusionar flujos
         self.main_stream = rx.merge(s1, s2, s3, s4).pipe(ops.share())
 
-        # --- PIPELINES REACTIVOS ---
+        # --- PIPELINES ---
 
-        # A. Visualización (WebSocket) con Sampling
+        # A. Visualización (WebSocket)
         self.main_stream.pipe(
             ops.sample(0.1),
             ops.map(lambda d: self._update_last_data(d))
         ).subscribe(self.broadcast_stream)
 
-        # B. Métricas (TPS) con Buffering
+        # B. Métricas (TPS)
         self.main_stream.pipe(
             ops.buffer_with_time(1.0),
             ops.map(lambda batch: len(batch))
@@ -63,7 +64,7 @@ class JurassicMonitorService:
             scheduler=self.scheduler
         )
 
-        # C. Alertas con Throttle
+        # C. Alertas
         self.main_stream.pipe(
             ops.filter(lambda d: d.valor > ALERT_THRESHOLDS.get(d.tipo, 999)),
             ops.throttle_first(2.0)
@@ -91,5 +92,4 @@ class JurassicMonitorService:
         print(msg)
 
 
-# Instancia Singleton para ser importada por la API
 monitor_service = JurassicMonitorService()

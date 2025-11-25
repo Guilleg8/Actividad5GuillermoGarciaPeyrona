@@ -1,0 +1,56 @@
+/* app/static/css/style.css */
+
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+    font-family: 'Consolas', 'Monaco', monospace;
+}
+
+.card {
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+}
+
+.card-header {
+    background-color: #2c2c2c;
+    border-bottom: 1px solid #444;
+    font-weight: bold;
+    color: #ffc107; /* Amarillo Jurassic */
+}
+
+.live-indicator {
+    height: 10px;
+    width: 10px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.connected {
+    background-color: #00ff00;
+    box-shadow: 0 0 10px #00ff00;
+}
+
+.disconnected {
+    background-color: #ff0000;
+}
+
+/* Tabla de sensores */
+.table-dark {
+    --bs-table-bg: #1e1e1e;
+    font-size: 0.9em;
+}
+
+.alert-row {
+    background-color: rgba(220, 53, 69, 0.2) !important;
+    color: #ff6b6b;
+    font-weight: bold;
+}
+
+#chart-img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    border: 1px solid #444;
+}

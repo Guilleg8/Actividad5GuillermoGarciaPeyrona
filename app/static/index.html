@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jurassic Park Monitor System</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="p-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom border-warning pb-2">
+        <h1 class="text-warning"><i class="bi bi-shield-exclamation"></i> JURASSIC PARK <span class="text-white h4">Secure Monitor v1.0</span></h1>
+        <div>
+            <span id="connection-status" class="badge bg-secondary"><span class="live-indicator"></span> Desconectado</span>
+        </div>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-header">ESTADO DEL SISTEMA (Backpressure)</div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6 mb-3">
+                            <h6 class="text-muted">CPU Load</h6>
+                            <h3 id="cpu-val" class="text-info">-%</h3>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <h6 class="text-muted">Memoria</h6>
+                            <h3 id="mem-val" class="text-info">-%</h3>
+                        </div>
+                        <div class="col-6">
+                            <h6 class="text-muted">Eventos/Seg (TPS)</h6>
+                            <h3 id="tps-val" class="text-success">0</h3>
+                        </div>
+                        <div class="col-6">
+                            <h6 class="text-muted">Alertas Activas</h6>
+                            <h3 id="alerts-val" class="text-danger">0</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">RENDIMIENTO HISTÓRICO</div>
+                <div class="card-body p-2 text-center">
+                    <img id="chart-img" src="" alt="Cargando gráfico..." />
+                    <small class="text-muted d-block mt-2">Actualizado cada 2s vía /metrics/chart</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between">
+                    <span>FEED DE SENSORES EN VIVO</span>
+                    <span class="badge bg-dark border border-secondary" id="last-update">Esperando datos...</span>
+                </div>
+                <div class="card-body p-0 table-responsive" style="max-height: 600px; overflow-y: auto;">
+                    <table class="table table-dark table-striped table-hover mb-0 text-center">
+                        <thead>
+                            <tr>
+                                <th>Hora</th>
+                                <th>Sensor ID</th>
+                                <th>Tipo</th>
+                                <th>Valor</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sensor-table-body">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/script.js"></script>
+</body>
+</html>
