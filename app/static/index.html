@@ -13,8 +13,18 @@
 </head>
 <body class="p-4">
 
-    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom border-warning pb-2">
-        <h1 class="text-warning"><i class="bi bi-shield-exclamation"></i> JURASSIC PARK <span class="text-white h4">Secure Monitor v1.0</span></h1>
+<div class="d-flex justify-content-between align-items-center mb-4 border-bottom border-warning pb-2">
+
+        <div class="d-flex align-items-center">
+            <h1 class="text-warning m-0">
+                <i class="bi bi-shield-exclamation"></i> JURASSIC PARK
+                <span class="text-white h4">Secure Monitor v1.0</span>
+            </h1>
+            <img src="/static/dino.gif"
+                 alt="Dino"
+                 style="height: 60px; margin-right: 15px;">
+        </div>
+
         <div>
             <span id="connection-status" class="badge bg-secondary"><span class="live-indicator"></span> Desconectado</span>
         </div>
@@ -28,19 +38,19 @@
                 <div class="card-body">
                     <div class="row text-center">
                         <div class="col-6 mb-3">
-                            <h6 class="text-muted">CPU Load</h6>
+                            <h6 class="stat-title">CPU Load</h6>
                             <h3 id="cpu-val" class="text-info">-%</h3>
                         </div>
                         <div class="col-6 mb-3">
-                            <h6 class="text-muted">Memoria</h6>
+                            <h6 class="stat-title">Memoria</h6>
                             <h3 id="mem-val" class="text-info">-%</h3>
                         </div>
                         <div class="col-6">
-                            <h6 class="text-muted">Eventos/Seg (TPS)</h6>
+                            <h6 class="stat-title">Eventos/Seg (TPS)</h6>
                             <h3 id="tps-val" class="text-success">0</h3>
                         </div>
                         <div class="col-6">
-                            <h6 class="text-muted">Alertas Activas</h6>
+                            <h6 class="stat-title">Alertas Activas</h6>
                             <h3 id="alerts-val" class="text-danger">0</h3>
                         </div>
                     </div>

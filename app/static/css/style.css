@@ -36,6 +36,26 @@ body {
     background-color: #ff0000;
 }
 
+/* Estilo para el GIF del Dinosaurio */
+.dino-logo {
+    height: 60px; /* Ajusta este número si lo quieres más grande o pequeño */
+    width: auto;
+    filter: drop-shadow(0 0 5px rgba(255, 193, 7, 0.5)); /* Un brillo amarillo radiactivo */
+    transition: transform 0.3s ease;
+}
+
+/* Efecto al pasar el ratón por encima */
+.dino-logo:hover {
+    transform: scale(1.1) rotate(-5deg);
+    cursor: pointer;
+}
+
+.stat-title {
+    color: #ffc107;
+    font-weight: bold;
+    text-transform: uppercase; /* Opcional: pone el texto en mayúsculas */
+}
+
 /* Tabla de sensores */
 .table-dark {
     --bs-table-bg: #1e1e1e;
@@ -54,3 +74,4 @@ body {
     border-radius: 4px;
     border: 1px solid #444;
 }
+
