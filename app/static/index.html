@@ -30,33 +30,31 @@
         </div>
     </div>
 
-    <div class="row g-4">
+<div class="row g-4 align-items-stretch"> <div class="col-md-4 d-flex flex-column">
 
-        <div class="col-md-4">
-            <div class="card mb-3">
-                <div class="card-header">ESTADO DEL SISTEMA (Backpressure)</div>
-                <div class="card-body">
-                    <div class="row text-center">
-                        <div class="col-6 mb-3">
-                            <h6 class="stat-title">CPU Load</h6>
-                            <h3 id="cpu-val" class="text-info">-%</h3>
-                        </div>
-                        <div class="col-6 mb-3">
-                            <h6 class="stat-title">Memoria</h6>
-                            <h3 id="mem-val" class="text-info">-%</h3>
-                        </div>
-                        <div class="col-6">
-                            <h6 class="stat-title">Eventos/Seg (TPS)</h6>
-                            <h3 id="tps-val" class="text-success">0</h3>
-                        </div>
-                        <div class="col-6">
-                            <h6 class="stat-title">Alertas Activas</h6>
-                            <h3 id="alerts-val" class="text-danger">0</h3>
-                        </div>
+        <div class="card mb-4 flex-grow-1">
+            <div class="card-header">ESTADO DEL SISTEMA (Backpressure)</div>
+            <div class="card-body d-flex align-items-center justify-content-center">
+                <div class="row text-center w-100">
+                    <div class="col-6 mb-3">
+                        <h6 class="stat-title">CPU Load</h6>
+                        <h3 id="cpu-val" class="text-info">-%</h3>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h6 class="stat-title">Memoria</h6>
+                        <h3 id="mem-val" class="text-info">-%</h3>
+                    </div>
+                    <div class="col-6">
+                        <h6 class="stat-title">Eventos/Seg (TPS)</h6>
+                        <h3 id="tps-val" class="text-success">0</h3>
+                    </div>
+                    <div class="col-6">
+                        <h6 class="stat-title">Alertas Activas</h6>
+                        <h3 id="alerts-val" class="text-danger">0</h3>
                     </div>
                 </div>
             </div>
-
+        </div>
             <div class="card">
                 <div class="card-header">RENDIMIENTO HISTÓRICO</div>
                 <div class="card-body p-2 text-center">
@@ -89,8 +87,63 @@
                 </div>
             </div>
         </div>
+        <div class="card mt-3">
+    <div class="card-header">ARQUITECTURA REACTIVA (FastAPI + RxPY)</div>
+    <div class="card-body p-2 text-center" style="background-color: #222;">
+
+        <div class="mermaid">
+            graph TD
+                %% Definición de Estilos
+                classDef sensor fill:#4a2c2c,stroke:#ff5555,color:#fff
+                classDef rx fill:#2c4a2c,stroke:#55ff55,color:#fff
+                classDef api fill:#2c3e50,stroke:#3498db,color:#fff
+                classDef client fill:#444,stroke:#aaa,color:#fff
+
+                subgraph Sensores ["🦕 Productores (Sensores)"]
+                    S1("🩺 Cardiaco"):::sensor --> M
+                    S2("🌡️ Temperatura"):::sensor --> M
+                    S3("🏃 Movimiento"):::sensor --> M
+                end
+
+                subgraph Servicio ["⚙️ RxPY (Backpressure)"]
+                    M(Merge) --> P1
+                    M --> P2
+                    M --> P3
+
+                    P1("Sample 0.1s"):::rx --> SUB1("Subject")
+                    P2("Buffer 1s"):::rx --> TPS("Calc TPS")
+                    P3("Filter > X"):::rx --> LOG("Logger")
+                end
+
+                subgraph API ["⚡ FastAPI (Asyncio)"]
+                    SUB1 -.-> Q("Cola Async"):::api
+                    Q -- "await get()" --> WS("WebSocket /ws/live"):::api
+                    TPS --> STATE("Estado RAM"):::api
+                end
+
+                subgraph Front ["🖥️ Cliente"]
+                    WS ==> TABLE("Tabla JS"):::client
+                    STATE -.-> KPI("Gráficos"):::client
+                end
+
+        </div>
+        </div>
+
+        <small class="text-muted d-block mt-2">
+            Renderizado en tiempo real con Mermaid.js
+        </small>
+        </div>
+        </div>
     </div>
 
     <script src="/static/js/script.js"></script>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark', // ¡Importante para tu dashboard oscuro!
+            securityLevel: 'loose'
+        });
+    </script>
 </body>
 </html>
