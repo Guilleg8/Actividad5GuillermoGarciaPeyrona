@@ -6,13 +6,11 @@ from app.models.sensor_data import SensorData
 
 
 class SensorFactory:
-    """Genera flujos reactivos simulando sensores físicos."""
 
     def __init__(self, scheduler):
         self.scheduler = scheduler
 
     def crear_stream(self, tipo: str, sensor_id: str, frecuencia: float):
-        """Crea un Observable que emite datos periódicos."""
         return rx.interval(frecuencia).pipe(
             ops.map(lambda _: self._generar_dato(tipo, sensor_id)),
             ops.observe_on(self.scheduler)

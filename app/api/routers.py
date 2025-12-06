@@ -12,7 +12,6 @@ router = APIRouter()
 
 @router.get("/metrics/status")
 async def get_system_status():
-    """Devuelve estado JSON."""
     process = psutil.Process()
     mem_info = process.memory_info()
 
@@ -36,7 +35,7 @@ async def get_system_status():
 
 @router.get("/metrics/chart")
 def get_performance_chart():
-    """Genera gráfico PNG."""
+
     history = monitor_service.metrics["tps_history"]
     if not history:
         return Response(content="Cargando datos...", media_type="text/plain")

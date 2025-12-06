@@ -11,20 +11,12 @@ router = APIRouter()
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
 
-    # 1. Obtenemos el bucle de eventos actual (el "jefe" de FastAPI)
     loop = asyncio.get_running_loop()
     queue = asyncio.Queue()
 
-    # 2. Función de puente SEGURO (Thread-Safe)
     def on_next(data: SensorData):
-        # ESTA ES LA CLAVE:
-        # Usamos call_soon_threadsafe para decirle al bucle principal:
-        # "Oye, cuando tengas un hueco, mete esto en la cola".
-        # Esto evita choques si RxPY está ejecutándose en otro hilo.
         loop.call_soon_threadsafe(queue.put_nowait, data)
 
-    # 3. Suscripción
-    # Nos aseguramos de que el servicio esté iniciado
     if not monitor_service.is_running:
         print("⚠️ El servicio de monitorización no estaba iniciado. Iniciando...")
         monitor_service.iniciar_sistema()
@@ -36,7 +28,6 @@ async def websocket_endpoint(websocket: WebSocket):
 
     try:
         while True:
-            # 4. Esperar datos de la cola (esto es 100% async y seguro)
             data = await queue.get()
 
             await websocket.send_json({

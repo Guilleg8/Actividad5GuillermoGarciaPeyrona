@@ -13,7 +13,6 @@ from app.services.sensor_factory import SensorFactory
 
 class JurassicMonitorService:
     def __init__(self):
-        # Inicializamos variables, pero NO el scheduler todavía
         self.metrics = {
             "total_events": 0,
             "tps_history": [],
@@ -23,7 +22,7 @@ class JurassicMonitorService:
         }
         self.broadcast_stream = Subject()
         self.is_running = False
-        self.scheduler = None  # Lo crearemos al iniciar
+        self.scheduler = None
 
     def iniciar_sistema(self):
         if self.is_running:
@@ -32,30 +31,23 @@ class JurassicMonitorService:
         print(f"--- Iniciando Servicios de {APP_NAME} ---")
         self.is_running = True
 
-        # --- CORRECCIÓN CRÍTICA: Obtener el loop AQUÍ, cuando ya está corriendo ---
         loop = asyncio.get_running_loop()
         self.scheduler = AsyncIOScheduler(loop)
         self.factory = SensorFactory(self.scheduler)
-        # -------------------------------------------------------------------------
 
-        # 1. Crear flujos
         s1 = self.factory.crear_stream("cardiaco", "T-Rex-01", 0.1)
         s2 = self.factory.crear_stream("temperatura", "T-Rex-01", 2.0)
         s3 = self.factory.crear_stream("movimiento", "Raptor-Squad", 0.05)
         s4 = self.factory.crear_stream("cardiaco", "Brachio-05", 1.0)
 
-        # 2. Fusionar flujos
         self.main_stream = rx.merge(s1, s2, s3, s4).pipe(ops.share())
 
-        # --- PIPELINES ---
 
-        # A. Visualización (WebSocket)
         self.main_stream.pipe(
             ops.sample(0.1),
             ops.map(lambda d: self._update_last_data(d))
         ).subscribe(self.broadcast_stream)
 
-        # B. Métricas (TPS)
         self.main_stream.pipe(
             ops.buffer_with_time(1.0),
             ops.map(lambda batch: len(batch))
@@ -64,7 +56,6 @@ class JurassicMonitorService:
             scheduler=self.scheduler
         )
 
-        # C. Alertas
         self.main_stream.pipe(
             ops.filter(lambda d: d.valor > ALERT_THRESHOLDS.get(d.tipo, 999)),
             ops.throttle_first(2.0)
