@@ -49,3 +49,44 @@ jurassic_monitor/
 │   └── main.py              # Configuración de FastAPI y montaje de estáticos
 ├── requirements             # Dependencias del proyecto
 └── run.py                   # Script de ejecución (incluye fix para Windows)
+```
+---
+
+##⚙️ Instalación y Ejecución
+
+###1.Clonar el repositorio
+git clone <url-del-repo>
+cd jurassic-monitor
+
+###2. Configurar entorno virtualSe recomienda usar un entorno virtual para aislar las dependencias.Bashpython -m venv .venv
+En Windows:
+.venv\Scripts\activate
+En Mac/Linux:
+source .venv/bin/activate
+
+###3. Instalar dependencias
+Es crucial instalar uvicorn[standard] para el soporte completo de WebSockets, tal como se especifica en el archivo requirements.
+pip install -r requirements
+
+###4. Ejecutar el Servidor
+Utiliza el script run.py incluido. Este script configura automáticamente asyncio.WindowsSelectorEventLoopPolicy si detecta que estás en Windows, evitando errores de concurrencia.
+python run.py
+
+Nota: El servidor arrancará en http://0.0.0.0:8000 con la recarga automática desactivada (reload=False) para garantizar la estabilidad del bucle de eventos en Windows.
+
+5. Acceder al Dashboard
+Abre tu navegador web y visita:👉 http://localhost:8000
+
+---
+
+##🧠 Conceptos de Backpressure Implementados
+
+El sistema gestiona la alta carga de datos en monitor_service.py mediante los siguientes operadores reactivos:
+ **1. Visualización**: ops.sample(0.1) Toma solo el último dato cada 100ms. Evita saturar el WebSocket y el renderizado JS del cliente, independientemente de la frecuencia de entrada.
+ **2. Métricas**: (TPS)ops.buffer_with_time(1.0)Acumula todos los eventos de 1 segundo en una lista (batch). Permite contar el volumen total de transacciones con una sola operación por segundo.
+ **3. Alertas**: ops.throttle_first(2.0)Tras detectar una alerta crítica, silencia alertas idénticas del mismo flujo durante 2 segundos. Previene el "spam" de logs cuando un sensor mantiene valores críticos.
+
+---
+
+📝 Créditos
+Desarrollado por Guillermo García Peyrona como parte de la Actividad de Monitorización Reactiva.
