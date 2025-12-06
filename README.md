@@ -52,34 +52,34 @@ jurassic_monitor/
 ```
 ---
 
-##⚙️ Instalación y Ejecución
+## ⚙️ Instalación y Ejecución
 
-###1.Clonar el repositorio
+### 1.Clonar el repositorio
 git clone <url-del-repo>
 cd jurassic-monitor
 
-###2. Configurar entorno virtualSe recomienda usar un entorno virtual para aislar las dependencias.Bashpython -m venv .venv
+### 2. Configurar entorno virtualSe recomienda usar un entorno virtual para aislar las dependencias.Bashpython -m venv .venv
 En Windows:
 .venv\Scripts\activate
 En Mac/Linux:
 source .venv/bin/activate
 
-###3. Instalar dependencias
+### 3. Instalar dependencias
 Es crucial instalar uvicorn[standard] para el soporte completo de WebSockets, tal como se especifica en el archivo requirements.
 pip install -r requirements
 
-###4. Ejecutar el Servidor
+### 4. Ejecutar el Servidor
 Utiliza el script run.py incluido. Este script configura automáticamente asyncio.WindowsSelectorEventLoopPolicy si detecta que estás en Windows, evitando errores de concurrencia.
 python run.py
 
 Nota: El servidor arrancará en http://0.0.0.0:8000 con la recarga automática desactivada (reload=False) para garantizar la estabilidad del bucle de eventos en Windows.
 
-5. Acceder al Dashboard
+### 5. Acceder al Dashboard
 Abre tu navegador web y visita:👉 http://localhost:8000
 
 ---
 
-##🧠 Conceptos de Backpressure Implementados
+## 🧠 Conceptos de Backpressure Implementados
 
 El sistema gestiona la alta carga de datos en monitor_service.py mediante los siguientes operadores reactivos:
  **1. Visualización**: ops.sample(0.1) Toma solo el último dato cada 100ms. Evita saturar el WebSocket y el renderizado JS del cliente, independientemente de la frecuencia de entrada.
@@ -88,5 +88,5 @@ El sistema gestiona la alta carga de datos en monitor_service.py mediante los si
 
 ---
 
-📝 Créditos
+## 📝 Créditos
 Desarrollado por Guillermo García Peyrona como parte de la Actividad de Monitorización Reactiva.
