@@ -57,6 +57,7 @@ jurassic_monitor/
 ### 1.Clonar el repositorio
 ```
 git clone https://github.com/Guilleg8/Actividad5GuillermoGarciaPeyrona.git
+cd Actividad5GuillermoGarciaPeyrona
 ```
 ### 2. Configurar entorno virtualSe recomienda usar un entorno virtual para aislar las dependencias.Bashpython -m venv .venv
 En Windows:
